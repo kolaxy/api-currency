@@ -9,6 +9,9 @@ packages = [{include = "api_currency"}]
 [tool.poetry.dependencies]
 python = "^3.12"
 black = "^23.12.1"
+django = "^5.0.1"
+djangorestframework = "^3.14.0"
+psycopg2-binary = "^2.9.9"
 
 
 [build-system]
