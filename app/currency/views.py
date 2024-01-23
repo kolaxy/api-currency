@@ -6,21 +6,24 @@ import requests
 import json
 
 from rest_framework import generics
+from rest_framework.response import Response
+from rest_framework import status
+from django.core.exceptions import PermissionDenied
+from django_ratelimit.decorators import ratelimit
+from django.utils.decorators import method_decorator
+
 from .serializers import UserRequestSerializer
 from .models import UserRequest
 
-
 from .utils import create_user_request
-
-
-from rest_framework.response import Response
-from rest_framework import status
 
 
 class UserRequestListView(generics.ListAPIView):
     queryset = UserRequest.objects.all()[:10]
     serializer_class = UserRequestSerializer
+    blocking_enabled = True
 
+    @method_decorator(ratelimit(key="user", rate="1/10s", method="GET"))
     def list(self, request, *args, **kwargs):
         url = "https://economia.awesomeapi.com.br/last/USD-RUB"
         headers = {"Content-Type": "application/json"}
